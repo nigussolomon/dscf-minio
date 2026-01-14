@@ -6,6 +6,12 @@ export const openApiDoc = {
     description: "Admin-only API for managing per-app MinIO instances",
   },
   servers: [{ url: "http://localhost:3000" }],
+  tags: [
+    { name: "General", description: "Root and health endpoints" },
+    { name: "Auth", description: "Authentication endpoints" },
+    { name: "MinIO Apps", description: "Manage apps and API keys" },
+    { name: "MinIO Files", description: "File upload and download endpoints" },
+  ],
   components: {
     securitySchemes: {
       bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
@@ -15,18 +21,21 @@ export const openApiDoc = {
   paths: {
     "/": {
       get: {
+        tags: ["General"],
         summary: "Root endpoint",
         responses: { "200": { description: "API is running" } },
       },
     },
     "/health": {
       get: {
+        tags: ["General"],
         summary: "Health check",
         responses: { "200": { description: "OK" } },
       },
     },
     "/auth/login": {
       post: {
+        tags: ["Auth"],
         summary: "Login and obtain access & refresh tokens",
         requestBody: {
           required: true,
@@ -64,6 +73,7 @@ export const openApiDoc = {
     },
     "/auth/refresh": {
       post: {
+        tags: ["Auth"],
         summary: "Refresh access token",
         security: [{ bearerAuth: [] }],
         responses: {
@@ -87,6 +97,7 @@ export const openApiDoc = {
     },
     "/auth/logout": {
       post: {
+        tags: ["Auth"],
         summary: "Logout and invalidate refresh token",
         security: [{ bearerAuth: [] }],
         responses: {
@@ -107,6 +118,7 @@ export const openApiDoc = {
     },
     "/minio/apps": {
       get: {
+        tags: ["MinIO Apps"],
         summary: "List all apps",
         security: [{ bearerAuth: [] }],
         responses: {
@@ -133,6 +145,7 @@ export const openApiDoc = {
         },
       },
       post: {
+        tags: ["MinIO Apps"],
         summary: "Create a new app with bucket and API key",
         security: [{ bearerAuth: [] }],
         requestBody: {
@@ -171,6 +184,7 @@ export const openApiDoc = {
     },
     "/minio/apps/{id}/regenerate": {
       post: {
+        tags: ["MinIO Apps"],
         summary: "Regenerate app API key",
         security: [{ bearerAuth: [] }],
         parameters: [
@@ -203,6 +217,7 @@ export const openApiDoc = {
     },
     "/minio/upload": {
       post: {
+        tags: ["MinIO Files"],
         summary: "Upload a file to the app bucket",
         security: [{ apiKeyAuth: [] }],
         requestBody: {
@@ -222,6 +237,7 @@ export const openApiDoc = {
     },
     "/minio/download/{objectName}": {
       get: {
+        tags: ["MinIO Files"],
         summary: "Download a file from the app bucket",
         security: [{ apiKeyAuth: [] }],
         parameters: [

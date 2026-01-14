@@ -105,7 +105,7 @@ minioRoutes.post("/upload", appApiKeyMiddleware, async (c) => {
 
     if (!success) return c.json({ message: "Failed to upload file" }, 500);
 
-    return c.json({ message: "Uploaded", fileName: file.name });
+    return c.json({ message: "Uploaded", fileName: success as string });
   } catch (err) {
     console.error("Upload error:", err);
     return c.json({ message: "Internal server error during upload" }, 500);

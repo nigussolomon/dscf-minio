@@ -35,8 +35,9 @@ export async function uploadObject(
   bucketName: string,
   objectName: string,
   data: Buffer | Readable | WebReadableStream,
-): Promise<boolean> {
+): Promise<string | boolean> {
   try {
+    const filePrefix = new Date().toISOString();
     let payload: Buffer | Readable;
 
     if (data instanceof Buffer || data instanceof Readable) {
@@ -45,9 +46,13 @@ export async function uploadObject(
       payload = Readable.fromWeb(data as WebReadableStream);
     }
 
-    await minioClient.putObject(bucketName, objectName, payload);
+    await minioClient.putObject(
+      bucketName,
+      `${filePrefix}-${objectName}`,
+      payload,
+    );
     console.log(`Uploaded object: ${objectName} to bucket: ${bucketName}`);
-    return true;
+    return `${filePrefix}-${objectName}`;
   } catch (err) {
     console.error(`Failed to upload "${objectName}" to "${bucketName}":`, err);
     return false;
