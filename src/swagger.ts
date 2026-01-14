@@ -6,40 +6,25 @@ export const openApiDoc = {
     description: "Admin-only API for managing per-app MinIO instances",
   },
   servers: [{ url: "http://localhost:3000" }],
-
   components: {
     securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-      },
+      bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
+      apiKeyAuth: { type: "apiKey", in: "header", name: "x-api-key" },
     },
   },
-
   paths: {
     "/": {
       get: {
         summary: "Root endpoint",
-        responses: {
-          "200": {
-            description: "API is running",
-          },
-        },
+        responses: { "200": { description: "API is running" } },
       },
     },
-
     "/health": {
       get: {
         summary: "Health check",
-        responses: {
-          "200": {
-            description: "OK",
-          },
-        },
+        responses: { "200": { description: "OK" } },
       },
     },
-
     "/auth/login": {
       post: {
         summary: "Login and obtain access & refresh tokens",
@@ -73,13 +58,10 @@ export const openApiDoc = {
               },
             },
           },
-          "401": {
-            description: "Invalid credentials",
-          },
+          "401": { description: "Invalid credentials" },
         },
       },
     },
-
     "/auth/refresh": {
       post: {
         summary: "Refresh access token",
@@ -93,19 +75,16 @@ export const openApiDoc = {
                   type: "object",
                   properties: {
                     accessToken: { type: "string" },
-                    refreshToken: { type: "string" }, // rotation included
+                    refreshToken: { type: "string" },
                   },
                 },
               },
             },
           },
-          "401": {
-            description: "Invalid or missing refresh token",
-          },
+          "401": { description: "Invalid or missing refresh token" },
         },
       },
     },
-
     "/auth/logout": {
       post: {
         summary: "Logout and invalidate refresh token",
@@ -117,16 +96,152 @@ export const openApiDoc = {
               "application/json": {
                 schema: {
                   type: "object",
-                  properties: {
-                    message: { type: "string", example: "Logged out" },
+                  properties: { message: { type: "string" } },
+                },
+              },
+            },
+          },
+          "401": { description: "Invalid or missing token" },
+        },
+      },
+    },
+    "/minio/apps": {
+      get: {
+        summary: "List all apps",
+        security: [{ bearerAuth: [] }],
+        responses: {
+          "200": {
+            description: "Apps list",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: { type: "number" },
+                      name: { type: "string" },
+                      description: { type: "string" },
+                      bucketName: { type: "string" },
+                      apiKey: { type: "string", description: "Obfuscated" },
+                    },
                   },
                 },
               },
             },
           },
-          "401": {
-            description: "Invalid or missing token",
+        },
+      },
+      post: {
+        summary: "Create a new app with bucket and API key",
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["name"],
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                },
+              },
+            },
           },
+        },
+        responses: {
+          "200": {
+            description: "App created",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    bucketName: { type: "string" },
+                    apiKey: { type: "string" },
+                    app: { type: "object" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/minio/apps/{id}/regenerate": {
+      post: {
+        summary: "Regenerate app API key",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "number" },
+            description: "App ID",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "API key regenerated",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                    apiKey: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "404": { description: "App not found" },
+        },
+      },
+    },
+    "/minio/upload": {
+      post: {
+        summary: "Upload a file to the app bucket",
+        security: [{ apiKeyAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            "multipart/form-data": {
+              schema: {
+                type: "object",
+                required: ["file"],
+                properties: { file: { type: "string", format: "binary" } },
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "Uploaded" } },
+      },
+    },
+    "/minio/download/{objectName}": {
+      get: {
+        summary: "Download a file from the app bucket",
+        security: [{ apiKeyAuth: [] }],
+        parameters: [
+          {
+            name: "objectName",
+            in: "path",
+            required: true,
+            schema: { type: "string" },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "File content",
+            content: {
+              "application/octet-stream": {
+                schema: { type: "string", format: "binary" },
+              },
+            },
+          },
+          "404": { description: "File not found" },
         },
       },
     },
