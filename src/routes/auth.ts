@@ -2,16 +2,9 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { db } from "../configs/db";
 import { verifyPassword } from "../helpers/bcrypt";
-import {
-  hashToken,
-  signAccessToken,
-  signRefreshToken,
-  verifyJwt,
-  verifyTokenHash,
-} from "../helpers/jwt";
+import { hashToken, signAccessToken, signRefreshToken } from "../helpers/jwt";
 import { users } from "../schema";
 import { eq } from "drizzle-orm";
-import { getBearerToken } from "../helpers/https";
 import {
   accessTokenMiddleware,
   refreshTokenMiddleware,

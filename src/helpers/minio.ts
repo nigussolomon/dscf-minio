@@ -1,9 +1,10 @@
 import { minioClient } from "../configs/minio";
 import { Readable } from "stream";
+import type { ReadableStream as WebReadableStream } from "stream/web";
 
 export function slugifyBucket(appName: string, prefix = "app"): string {
   try {
-    let slug = appName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    const slug = appName.toLowerCase().replace(/[^a-z0-9-]/g, "-");
     let bucketName = `${prefix}-${slug}`;
     bucketName = bucketName.replace(/^-+/, "").replace(/-+$/, "");
     if (bucketName.length > 63) bucketName = bucketName.slice(0, 63);
@@ -33,14 +34,15 @@ export async function ensureBucket(bucketName: string): Promise<boolean> {
 export async function uploadObject(
   bucketName: string,
   objectName: string,
-  data: Buffer | Readable,
+  data: Buffer | Readable | WebReadableStream,
 ): Promise<boolean> {
   try {
-    // If data is a ReadableStream, convert to Node.js Readable
-    let payload: Buffer | Readable = data;
-    if ("getReader" in data) {
-      // Web File/Blob streams have getReader()
-      payload = Readable.from(data as any);
+    let payload: Buffer | Readable;
+
+    if (data instanceof Buffer || data instanceof Readable) {
+      payload = data;
+    } else {
+      payload = Readable.fromWeb(data as WebReadableStream);
     }
 
     await minioClient.putObject(bucketName, objectName, payload);

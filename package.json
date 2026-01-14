@@ -1,21 +1,30 @@
 {
   "name": "dscf-minio",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run index.ts",
+    "dev": "bun run src/index.ts",
     "migration:gen": "bun x drizzle-kit generate",
     "migration:run": "bun x drizzle-kit push",
-    "seed": "bun run src/seeds"
+    "seed": "bun run src/seeds",
+    "lint": "bunx eslint ."
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/bcrypt": "^6.0.0",
     "@types/bun": "latest",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
     "drizzle-kit": "^0.31.8",
-    "tsx": "^4.21.0"
+    "eslint": "^9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^17.0.0",
+    "jiti": "^2.6.1",
+    "tsx": "^4.21.0",
+    "typescript-eslint": "^8.53.0"
   },
   "peerDependencies": {
     "typescript": "^5"

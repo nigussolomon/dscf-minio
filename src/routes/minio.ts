@@ -13,7 +13,6 @@ import { appApiKeyMiddleware } from "../middlewares/apiKey";
 import { accessTokenMiddleware } from "../middlewares/auth";
 import { obfuscateSecret } from "../helpers/formatters";
 import { eq } from "drizzle-orm";
-import { minioClient } from "../configs/minio";
 import { Readable } from "stream";
 
 export const minioRoutes = new Hono();
@@ -101,7 +100,7 @@ minioRoutes.post("/upload", appApiKeyMiddleware, async (c) => {
     const app = c.get("app");
     if (!app) return c.json({ message: "App not found in context" }, 500);
 
-    const nodeStream = Readable.from(file.stream() as any);
+    const nodeStream = Readable.from(file.stream());
     const success = await uploadObject(app.bucketName, file.name, nodeStream);
 
     if (!success) return c.json({ message: "Failed to upload file" }, 500);

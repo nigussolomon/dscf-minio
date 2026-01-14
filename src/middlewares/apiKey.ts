@@ -1,4 +1,4 @@
-import { Hono, type Context } from "hono";
+import { type Context } from "hono";
 import { db } from "../configs/db";
 import { apps } from "../schema";
 import { isNotNull } from "drizzle-orm";

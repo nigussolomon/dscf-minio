@@ -1,8 +1,8 @@
 import { Hono } from "hono";
 import { swaggerUI } from "@hono/swagger-ui";
-import { logger } from "./src/configs/pino";
-import { openApiDoc } from "./src/swagger";
-import routes from "./src/routes";
+import { logger } from "./configs/pino";
+import { openApiDoc } from "./swagger";
+import routes from "./routes";
 
 const app = new Hono();
 
