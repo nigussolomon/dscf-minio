@@ -1,0 +1,29 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MinIO Dev Service API",
+    "version": "1.0.0",
+    "description": "API for spinning up per-app MinIO instances (admin-only)"
+  },
+  "servers": [{ "url": "http://localhost:3000" }],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root endpoint",
+        "description": "Returns a basic API message",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "MinIO Dev Service API"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
