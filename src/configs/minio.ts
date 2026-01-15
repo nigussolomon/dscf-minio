@@ -2,9 +2,9 @@ import "dotenv/config";
 import { Client } from "minio";
 
 export const minioClient = new Client({
-  endPoint: process.env.MINIO_HOST || "localhost",
-  port: parseInt(process.env.MINIO_PORT || "9000"),
+  endPoint: process.env.MINIO_ENDPOINT || "",
+  port: parseInt(process.env.MINIO_PORT || ""),
   useSSL: process.env.MINIO_USE_SSL === "true",
-  accessKey: process.env.MINIO_ROOT_USER || "admin",
-  secretKey: process.env.MINIO_ROOT_PASSWORD || "admin123",
+  accessKey: process.env.MINIO_ROOT_USER || "",
+  secretKey: process.env.MINIO_ROOT_PASSWORD || "",
 });

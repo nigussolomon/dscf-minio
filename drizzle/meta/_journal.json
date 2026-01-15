@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1768381232509,
-      "tag": "0000_wild_darkstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1768385141168,
-      "tag": "0001_safe_emma_frost",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1768385787323,
-      "tag": "0002_free_unus",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1768386087284,
-      "tag": "0003_chunky_paibok",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1768387945950,
-      "tag": "0004_worthless_zaran",
+      "when": 1768452699937,
+      "tag": "0000_chemical_shape",
       "breakpoints": true
     }
   ]

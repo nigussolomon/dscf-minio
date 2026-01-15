@@ -4,10 +4,13 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun run src/index.ts",
+    "dev": "bun run --watch src",
+    "dev:watch": "bun run --watch src",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "start": "bun run dist/index.js",
     "migration:gen": "bun x drizzle-kit generate",
     "migration:run": "bun x drizzle-kit push",
-    "seed": "bun run src/seeds",
+    "seed": "bun run src/seeds/index.ts",
     "lint": "bunx eslint ."
   },
   "devDependencies": {

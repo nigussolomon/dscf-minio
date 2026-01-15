@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Hono } from "hono";
 import { swaggerUI } from "@hono/swagger-ui";
 import { logger } from "./configs/pino";
@@ -28,7 +29,7 @@ app.get("/health", (c) => c.text("OK"));
 app.route("/", routes);
 
 Bun.serve({
-  port: 3000,
+  port: process.env.PORT || 3000,
   fetch: app.fetch,
 });
 

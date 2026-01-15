@@ -132,7 +132,7 @@ minioRoutes.post("/upload", appApiKeyMiddleware, async (c) => {
 
     return c.json({
       message: "Uploaded",
-      fileName: file.name,
+      fileName: success,
       size: file.size,
       mimeType: file.type,
     });
