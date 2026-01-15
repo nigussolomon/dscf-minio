@@ -15,6 +15,15 @@ import { obfuscateSecret } from "../helpers/formatters";
 import { eq } from "drizzle-orm";
 import { Readable } from "stream";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+
+const ALLOWED_MIME_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+]);
+
 export const minioRoutes = new Hono();
 
 const createAppSchema = z.object({
@@ -94,18 +103,39 @@ minioRoutes.post("/apps", accessTokenMiddleware, async (c) => {
 minioRoutes.post("/upload", appApiKeyMiddleware, async (c) => {
   try {
     const form = await c.req.formData();
-    const file = form.get("file") as File;
-    if (!file) return c.json({ message: "No file provided" }, 400);
+    const file = form.get("file");
+
+    if (!(file instanceof File)) {
+      return c.json({ message: "No file provided" }, 400);
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return c.json({ message: "File size exceeds 5MB limit" }, 413);
+    }
+
+    if (!ALLOWED_MIME_TYPES.has(file.type)) {
+      return c.json({ message: `Unsupported file type: ${file.type}` }, 415);
+    }
 
     const app = c.get("app");
-    if (!app) return c.json({ message: "App not found in context" }, 500);
+    if (!app) {
+      return c.json({ message: "App not found in context" }, 500);
+    }
 
     const nodeStream = Readable.from(file.stream());
+
     const success = await uploadObject(app.bucketName, file.name, nodeStream);
 
-    if (!success) return c.json({ message: "Failed to upload file" }, 500);
+    if (!success) {
+      return c.json({ message: "Failed to upload file" }, 500);
+    }
 
-    return c.json({ message: "Uploaded", fileName: success as string });
+    return c.json({
+      message: "Uploaded",
+      fileName: file.name,
+      size: file.size,
+      mimeType: file.type,
+    });
   } catch (err) {
     console.error("Upload error:", err);
     return c.json({ message: "Internal server error during upload" }, 500);
