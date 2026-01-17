@@ -16,7 +16,7 @@ COPY . .
 RUN bun run build
 
 ENV NODE_ENV=production
-EXPOSE 3001
+EXPOSE 3000
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
