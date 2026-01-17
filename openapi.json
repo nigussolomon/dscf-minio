@@ -5,7 +5,9 @@
     "version": "1.0.0",
     "description": "API for spinning up per-app MinIO instances (admin-only)"
   },
-  "servers": [{ "url": "http://localhost:3000" }],
+  "servers": [
+    { "url": "http://dscfdev-minio-pd3zkn-b6275d-196-188-53-80.traefik.me" }
+  ],
   "paths": {
     "/": {
       "get": {

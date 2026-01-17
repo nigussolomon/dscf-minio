@@ -5,7 +5,9 @@ export const openApiDoc = {
     version: "1.0.0",
     description: "Admin-only API for managing per-app MinIO instances",
   },
-  servers: [{ url: "http://localhost:3000" }],
+  servers: [
+    { url: "http://dscfdev-minio-pd3zkn-b6275d-196-188-53-80.traefik.me" },
+  ],
   tags: [
     { name: "General", description: "Root and health endpoints" },
     { name: "Auth", description: "Authentication endpoints" },
