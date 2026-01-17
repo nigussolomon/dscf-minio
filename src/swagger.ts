@@ -1,3 +1,4 @@
+import "dotenv/config";
 export const openApiDoc = {
   openapi: "3.0.0",
   info: {
@@ -5,9 +6,7 @@ export const openApiDoc = {
     version: "1.0.0",
     description: "Admin-only API for managing per-app MinIO instances",
   },
-  servers: [
-    { url: "http://dscfdev-minio-pd3zkn-b6275d-196-188-53-80.traefik.me" },
-  ],
+  servers: [{ url: process.env.API_URL }],
   tags: [
     { name: "General", description: "Root and health endpoints" },
     { name: "Auth", description: "Authentication endpoints" },
