@@ -29,6 +29,7 @@ app.get("/health", (c) => c.text("OK"));
 app.route("/", routes);
 
 Bun.serve({
+  hostname: "0.0.0.0",
   port: process.env.PORT || 3000,
   fetch: app.fetch,
 });
