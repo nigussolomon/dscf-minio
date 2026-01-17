@@ -4,6 +4,9 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: minio_api
+    ports:
+      - 3000
+      - 80
     depends_on:
       - db
       - minio
