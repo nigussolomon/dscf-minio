@@ -13,6 +13,8 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    networks:
+      - app_net
 
   db:
     image: postgres:16
@@ -24,6 +26,8 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - app_net
 
   minio:
     image: minio/minio:latest
@@ -32,12 +36,18 @@ services:
       - .env
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000" # MinIO API
-      - "9001:9001" # MinIO Console
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
     restart: unless-stopped
+    networks:
+      - app_net
 
 volumes:
   db_data:
   minio_data:
+
+networks:
+  app_net:
+    driver: bridge
